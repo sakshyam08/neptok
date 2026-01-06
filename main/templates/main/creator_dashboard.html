@@ -1,0 +1,630 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Creator Dashboard - NepTok{% endblock %}
+
+{% block content %}
+<style>
+    .dashboard-header {
+        margin-bottom: 2rem;
+    }
+
+    .dashboard-title {
+        color: var(--accent-color);
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .dashboard-subtitle {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .stats-grid {
+        margin-bottom: 3rem;
+    }
+
+    .content-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: var(--shadow);
+    }
+
+    .content-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .content-header {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .content-title {
+        color: var(--accent-color);
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin: 0;
+    }
+
+    .content-meta {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .meta-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .meta-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+    }
+
+    .meta-value {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: var(--accent-color);
+    }
+
+    .content-description {
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .views-input {
+        max-width: 150px;
+        display: inline-block;
+    }
+
+    .application-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: var(--shadow);
+    }
+
+    .application-header {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .application-title {
+        color: var(--accent-color);
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin: 0;
+    }
+
+    .application-status {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .status-pending {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+    }
+
+    .status-approved {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .status-rejected {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .status-completed {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+    }
+
+    .quick-actions {
+        margin-bottom: 2rem;
+    }
+
+    .action-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: transform 0.3s ease;
+        box-shadow: var(--shadow);
+    }
+
+    .action-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .action-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .action-title {
+        color: var(--accent-color);
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .action-description {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-secondary);
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .earnings-highlight {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 1rem;
+        border-radius: 12px;
+        text-align: center;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow);
+    }
+
+    .earnings-amount {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .earnings-label {
+        font-size: 1rem;
+        opacity: 0.9;
+    }
+
+    .section-title {
+        color: var(--accent-color);
+        font-weight: 600;
+    }
+    .withdraw-btn {
+    background-color: #28a745; /* Green */
+    color: white;
+    padding: 12px 30px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.withdraw-btn:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+    
+</style>
+
+<div class="dashboard-header">
+    <h1 class="dashboard-title">Creator Dashboard</h1>
+    <p class="dashboard-subtitle">Welcome back, {{ user.username }}! Track your earnings and manage your content.</p>
+</div>
+
+<!-- Earnings Highlight -->
+<div class="earnings-highlight">
+    <div class="earnings-amount">Rs{{ total_earnings|floatformat:2 }}</div>
+    <div class="earnings-label">Total Earnings</div>
+</div>
+<div class="text-center my-4">
+    <a href="{% url 'get_withdraw' %}" class=" btn btn-lg withdraw-btn" >Withdraw </a>
+</div>
+
+<!-- Stats Grid -->
+<div class="stats-grid">
+    <div class="row">
+        <div class="col-lg-3 col-md-6">
+            <div class="stats-card text-center">
+                <div class="stats-number">{{ total_views|floatformat:0 }}</div>
+                <div class="stats-label">Total Views</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="stats-card text-center">
+                <div class="stats-number">{{ contents.count }}</div>
+                <div class="stats-label">Content Pieces</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="stats-card text-center">
+                <div class="stats-number">{{ applications.count }}</div>
+                <div class="stats-label">Applications</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="stats-card text-center">
+                <div class="stats-number">Rs100</div>
+                <div class="stats-label">Per 1000 Views</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="quick-actions">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="action-card">
+                <div class="action-icon">📝</div>
+                <h3 class="action-title">Add Content</h3>
+                <p class="action-description">Track your TikTok content performance</p>
+                <a href="{% url 'add_content' %}" class="btn btn-primary btn-sm">Add Content</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="action-card">
+                <div class="action-icon">🎯</div>
+                <h3 class="action-title">Browse Campaigns</h3>
+                <p class="action-description">Find campaigns to apply for</p>
+                <a href="{% url 'campaigns' %}" class="btn btn-outline-primary btn-sm">Browse</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="action-card">
+                <div class="action-icon">📊</div>
+                <h3 class="action-title">View Analytics</h3>
+                <p class="action-description">Track your performance metrics</p>
+                <a href="#" class="btn btn-outline-primary btn-sm">View Reports</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Content Section -->
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="section-title">Your Content</h2>
+            <a href="{% url 'add_content' %}" class="btn btn-primary">Add New Content</a>
+        </div>
+    </div>
+</div>
+
+{% if contents %}
+    <div class="row">
+        {% for content in contents %}
+            <div class="col-lg-6">
+                <div class="content-card">
+                    <div class="content-header">
+                        <h3 class="content-title">{{ content.title }}</h3>
+                    </div>
+                    
+                    <div class="content-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Views</span>
+                            <span class="meta-value" id="views-{{ content.id }}">{{ content.views }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Earnings</span>
+                            <span class="meta-value" id="earnings-{{ content.id }}">Rs{{ content.earnings|floatformat:2 }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Created</span>
+                            <span class="meta-value">{{ content.created_at|date:"M d" }}</span>
+                        </div>
+                    </div>
+                    
+                    {% if content.description %}
+                        <p class="content-description">{{ content.description|truncatewords:20 }}</p>
+                    {% endif %}
+                    
+                    <div class="d-flex gap-2 align-items-center">
+                        <label for="views-input-{{ content.id }}" class="form-label mb-0" style="color: var(--text-primary);">Update Views:</label>
+                        <input type="number" class="form-control views-input" id="views-input-{{ content.id }}" value="{{ content.views }}" min="0">
+                        <button class="btn btn-outline-primary btn-sm" onclick="updateViews({{ content.id }})">Update</button>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">📱</div>
+        <h3 class="section-title">No Content Yet</h3>
+        <p>Start tracking your TikTok content to earn money based on your views.</p>
+        <a href="{% url 'add_content' %}" class="btn btn-primary">Add Your First Content</a>
+    </div>
+{% endif %}
+
+<!-- Applications Section -->
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="section-title" style="margin-bottom: 1rem;">Your Applications</h2>
+    </div>
+</div>
+
+{% if applications %}
+    <div class="row">
+        {% for application in applications %}
+            <div class="col-lg-6">
+                <div class="application-card">
+                    <div class="application-header">
+                        <h3 class="application-title">{{ application.campaign.title }}</h3>
+                        <span class="application-status status-{{ application.status }}">
+                            {{ application.status|title }}
+                        </span>
+                    </div>
+                    
+                    <div class="content-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Actual Views</span>
+                            <span class="meta-value" id="app-views-{{ application.id }}">{{ application.views|floatformat:0 }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Actual Earnings</span>
+                            <span class="meta-value" id="app-earnings-{{ application.id }}">Rs{{ application.earnings|floatformat:2 }}</span>
+                        </div>
+                       
+                        <div class="meta-item">
+                            <span class="meta-label">Campaign Budget</span>
+                            <span class="meta-value" id="campaign-budget-{{ application.campaign.id }}">Rs{{ application.campaign.budget|floatformat:2 }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Remaining Budget</span>
+                            <span class="meta-value" id="remaining-budget-{{ application.campaign.id }}">Rs{{ application.campaign.get_remaining_budget|floatformat:2 }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Status</span>
+                            <span class="meta-value">{{ application.status|title }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Applied</span>
+                            <span class="meta-value">{{ application.applied_at|date:"M d" }}</span>
+                        </div>
+                    </div>
+                    
+                    <p class="content-description">{{ application.proposal|truncatewords:30 }}</p>
+                    
+                    {% if application.status == 'approved' %}
+                        <div class="d-flex gap-2 align-items-center mt-3">
+                            <label for="app-views-input-{{ application.id }}" class="form-label mb-0" style="color: var(--text-primary);">Update Views:</label>
+                            <input type="number" class="form-control views-input" id="app-views-input-{{ application.id }}" value="{{ application.views }}" min="0">
+                            <button class="btn btn-outline-primary btn-sm" onclick="updateApplicationViews({{ application.id }})">Update</button>
+                        </div>
+                        
+                        <!-- Budget warning for low remaining budget -->
+                        {% if application.campaign.get_remaining_budget < 100 %}
+                            <div class="alert alert-warning mt-2" style="font-size: 0.9rem;">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Low campaign budget remaining: Rs{{ application.campaign.get_remaining_budget|floatformat:2 }}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">📝</div>
+        <h3 class="section-title">No Applications Yet</h3>
+        <p>Start applying for campaigns to earn money with your content.</p>
+        <a href="{% url 'campaigns' %}" class="btn btn-primary">Browse Campaigns</a>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function updateViews(contentId) {
+    const viewsInput = document.getElementById(`views-input-${contentId}`);
+    const newViews = parseInt(viewsInput.value);
+    
+    if (newViews < 0) {
+        alert('Views must be a positive number');
+        return;
+    }
+    
+    fetch(`/update-views/${contentId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({
+            views: newViews
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById(`views-${contentId}`).textContent = data.views;
+            document.getElementById(`earnings-${contentId}`).textContent = `Rs${data.earnings.toFixed(2)}`;
+            
+            // Update total earnings display
+            updateTotalEarnings();
+            
+            alert('Views updated successfully!');
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error updating views');
+    });
+}
+function updateApplicationViews(applicationId) {
+    const viewsInput = document.getElementById(`app-views-input-${applicationId}`);
+    
+    // Check if the input element exists before using it
+    if (!viewsInput) {
+        alert('Update failed: views input not found for this application.');
+        return;  // Stop execution to avoid error
+    }
+    
+    const newViews = parseInt(viewsInput.value);
+    
+    // Validate input
+    if (newViews < 0) {
+        alert('Views must be non-negative');
+        return;
+    }
+    
+    // Show loading state
+    const updateButton = document.querySelector(`button[onclick="updateApplicationViews(${applicationId})"]`);
+    const originalText = updateButton.textContent;
+    updateButton.textContent = 'Updating...';
+    updateButton.disabled = true;
+    
+    fetch(`/update-application-views/${applicationId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({ views: newViews })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Reset button state
+        updateButton.textContent = originalText;
+        updateButton.disabled = false;
+        
+        if (data.success) {
+            // Update views and earnings display
+            document.getElementById(`app-views-${applicationId}`).textContent = data.views.toLocaleString();
+            document.getElementById(`app-earnings-${applicationId}`).textContent = `Rs${data.earnings.toFixed(2)}`;
+            
+            // Update campaign budget display if it exists
+            const campaignBudgetElement = document.getElementById(`campaign-budget-${data.campaign_id || applicationId}`);
+            if (campaignBudgetElement) {
+                campaignBudgetElement.textContent = `Rs${data.campaign_budget.toFixed(2)}`;
+            }
+            
+            // Update remaining budget display if it exists
+            const remainingBudgetElement = document.getElementById(`remaining-budget-${data.campaign_id || applicationId}`);
+            if (remainingBudgetElement) {
+                remainingBudgetElement.textContent = `Rs${data.remaining_budget.toFixed(2)}`;
+            }
+            
+            // Show success message with earnings increase if applicable
+            let successMessage = 'Application views updated successfully!';
+            if (data.earnings_increase > 0) {
+                successMessage += `\nEarnings increased by Rs${data.earnings_increase.toFixed(2)}`;
+            }
+            alert(successMessage);
+            
+            // Update total earnings display
+            updateTotalEarnings();
+            
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        // Reset button state
+        updateButton.textContent = originalText;
+        updateButton.disabled = false;
+        
+        console.error('Error:', error);
+        alert('Error updating application views. Please try again.');
+    });
+}
+
+function updateTotalEarnings() {
+    // Calculate total earnings from all content and applications
+    let totalEarnings = 0;
+    
+    // Sum content earnings
+    const contentEarningsElements = document.querySelectorAll('[id^="earnings-"]:not([id^="app-earnings-"])');
+    contentEarningsElements.forEach(element => {
+        const earningsText = element.textContent.replace('Rs', '');
+        totalEarnings += parseFloat(earningsText) || 0;
+    });
+    
+    // Sum application earnings
+    const appEarningsElements = document.querySelectorAll('[id^="app-earnings-"]');
+    appEarningsElements.forEach(element => {
+        const earningsText = element.textContent.replace('Rs', '');
+        totalEarnings += parseFloat(earningsText) || 0;
+    });
+    
+    // Update the total earnings display
+    const totalEarningsElement = document.querySelector('.earnings-amount');
+    if (totalEarningsElement) {
+        totalEarningsElement.textContent = `Rs${totalEarnings.toFixed(2)}`;
+    }
+}
+
+
+<script src="https://khalti.com/static/khalti-checkout.js"></script>
+<script>
+    var config = {
+        publicKey: "your_public_key",  // Replace with your Khalti public key
+        productIdentity: "unique_product_id",  // Replace with a unique identifier for the product
+        productName: "Your Product Name",  // Replace with the name of your product
+        productUrl: "https://your-website.com/product-url",  // Replace with the URL of your product
+        paymentPreference: ["KHALTI", "EBANKING", "MOBILE_BANKING"],  // Payment methods you want to accept
+        eventHandler: {
+            onSuccess: function (payload) {
+                // Handle the successful payment response
+                fetch("/verify-khalti-payment/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: JSON.stringify(payload)
+                }).then(response => response.json())
+                  .then(data => {
+                      if (data.success) {
+                          alert("Payment successful!");
+                      } else {
+                          alert("Payment failed!");
+                      }
+                  });
+            },
+            onError: function (error) {
+                alert("Payment error: " + error);
+            },
+            onClose: function () {
+                console.log("Widget is closed");
+            }
+        }
+    };
+    var checkout = new KhaltiCheckout(config);
+    document.getElementById("payment-button").onclick = function () {
+        checkout.show({ amount: 1000 }); // Amount in paisa (e.g., 1000 paisa = 10.00 units)
+    }
+</script>
+{% endblock %}

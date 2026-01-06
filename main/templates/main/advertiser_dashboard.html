@@ -1,0 +1,332 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Advertiser Dashboard - NepTok{% endblock %}
+
+{% block content %}
+<style>
+    .dashboard-header {
+        margin-bottom: 2rem;
+    }
+
+    .dashboard-title {
+        color: var(--accent-color);
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .dashboard-subtitle {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .stats-grid {
+        margin-bottom: 3rem;
+    }
+
+    .campaign-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: var(--shadow);
+    }
+
+    .campaign-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .campaign-header {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .campaign-title {
+        color: var(--accent-color);
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin: 0;
+    }
+
+    .campaign-status {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .status-active {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .status-paused {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+    }
+
+    .status-completed {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+    }
+
+    .status-draft {
+        background-color: #e2e3e5;
+        color: #383d41;
+        border: 1px solid #d6d8db;
+    }
+
+    .campaign-meta {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .meta-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .meta-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+    }
+
+    .meta-value {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: var(--accent-color);
+    }
+
+    .campaign-description {
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .campaign-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-secondary);
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .quick-actions {
+        margin-bottom: 2rem;
+    }
+
+    .action-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: transform 0.3s ease;
+        box-shadow: var(--shadow);
+    }
+
+    .action-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .action-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .action-title {
+        color: var(--accent-color);
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .action-description {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .section-title {
+        color: var(--accent-color);
+        font-weight: 600;
+    }
+</style>
+
+<div class="dashboard-header">
+    <h1 class="dashboard-title">Advertiser Dashboard</h1>
+    <p class="dashboard-subtitle">Welcome back, {{ user.username }}! Manage your campaigns and track performance.</p>
+</div>
+
+<!-- Stats Grid -->
+<div class="stats-grid">
+    <div class="row">
+        <div class="col-lg-3 col-md-6">
+            <div class="stats-card text-center">
+                <div class="stats-number">{{ total_campaigns }}</div>
+                <div class="stats-label">Total Campaigns</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="stats-card text-center">
+                <div class="stats-number">{{ active_campaigns }}</div>
+                <div class="stats-label">Active Campaigns</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="stats-card text-center">
+                <div class="stats-number">{{ total_applications }}</div>
+                <div class="stats-label">Total Applications</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="stats-card text-center">
+                <div class="stats-number">₹100</div>
+                <div class="stats-label">Avg CPM Rate</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="quick-actions">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="action-card">
+                <div class="action-icon">📝</div>
+                <h3 class="action-title">Create Campaign</h3>
+                <p class="action-description">Launch a new advertising campaign</p>
+                <a href="{% url 'create_campaign' %}" class="btn btn-primary btn-sm">Get Started</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="action-card">
+                <div class="action-icon">📊</div>
+                <h3 class="action-title">View Analytics</h3>
+                <p class="action-description">Track campaign performance</p>
+                <a href="#" class="btn btn-outline-primary btn-sm">View Reports</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="action-card">
+                <div class="action-icon">👥</div>
+                <h3 class="action-title">Manage Applications</h3>
+                <p class="action-description">Review creator applications</p>
+                <a href="{% url 'advertiser_applications' %}" class="btn btn-outline-primary btn-sm">Review</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Campaigns Section -->
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="section-title">Your Campaigns</h2>
+            <a href="{% url 'create_campaign' %}" class="btn btn-primary">Create New Campaign</a>
+        </div>
+    </div>
+</div>
+
+{% if campaigns %}
+    <div class="row">
+        {% for campaign in campaigns %}
+            <div class="col-lg-6">
+                <div class="campaign-card">
+                    <div class="campaign-header">
+                        <h3 class="campaign-title">{{ campaign.title }}</h3>
+                        <span class="campaign-status status-{{ campaign.status }}">
+                            {{ campaign.status|title }}
+                        </span>
+                    </div>
+                    
+                    <div class="campaign-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Budget</span>
+                            <span class="meta-value">₹{{ campaign.budget }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">CPM Rate</span>
+                            <span class="meta-value">₹100</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Applications</span>
+                            <span class="meta-value">{{ campaign.get_applications_count }}</span>
+                        </div>
+                    </div>
+                    
+                    <p class="campaign-description">{{ campaign.description|truncatewords:30 }}</p>
+                    
+                    <div class="campaign-actions">
+                        <a href="#" class="btn btn-outline-primary btn-sm">View Details</a>
+                        <a href="#" class="btn btn-outline-secondary btn-sm">Edit</a>
+                        <a href="#" class="btn btn-outline-info btn-sm">Applications</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">📝</div>
+        <h3 class="section-title">No Campaigns Yet</h3>
+        <p>Start by creating your first advertising campaign to connect with TikTok creators.</p>
+        <a href="{% url 'create_campaign' %}" class="btn btn-primary">Create Your First Campaign</a>
+    </div>
+{% endif %}
+
+<!-- Recent Activity -->
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="section-title" style="margin-bottom: 1rem;">Recent Activity</h2>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="section-title">Recent Applications</h5>
+                        <p style="color: var(--text-secondary);">
+                            You have {{ total_applications }} total applications across all campaigns.
+                        </p>
+                        <a href="#" class="btn btn-outline-primary btn-sm">View All Applications</a>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="section-title">Performance Overview</h5>
+                        <p style="color: var(--text-secondary);">
+                            Track your campaign performance and ROI metrics.
+                        </p>
+                        <a href="#" class="btn btn-outline-primary btn-sm">View Analytics</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

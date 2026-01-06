@@ -1,0 +1,18 @@
+<h2>My Applications</h2>
+{% for app in applications %}
+    <div style="margin-bottom: 20px; border: 1px solid #ccc; padding: 10px;">
+        <p><strong>Campaign:</strong> {{ app.campaign.title }}</p>
+        <p><strong>Status:</strong> {{ app.status }}</p>
+        
+        {% if app.status == 'pending' %}
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="application_id" value="{{ app.id }}">
+                <button name="action" value="accept">Accept</button>
+                <button name="action" value="decline">Decline</button>
+            </form>
+        {% endif %}
+    </div>
+{% empty %}
+    <p>You haven't applied to any campaigns yet.</p>
+{% endfor %}

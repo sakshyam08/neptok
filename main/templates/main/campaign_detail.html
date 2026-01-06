@@ -1,0 +1,305 @@
+{% extends 'main/base.html' %}
+
+{% block title %}{{ campaign.title }} - NepTok{% endblock %}
+
+{% block content %}
+<style>
+    .campaign-detail-header {
+        margin-bottom: 2rem;
+    }
+
+    .campaign-title {
+        color: var(--accent-color);
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .campaign-subtitle {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .campaign-detail-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow);
+    }
+
+    .campaign-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .campaign-title-section {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .campaign-status {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+        text-transform: capitalize;
+    }
+
+    .campaign-meta-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .meta-item {
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .meta-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .meta-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--accent-color);
+    }
+
+    .budget-info {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .budget-title {
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .budget-amount {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    .budget-progress {
+        margin-top: 1rem;
+    }
+
+    .progress-bar {
+        height: 8px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 4px;
+        transition: width 0.3s ease;
+    }
+
+    .campaign-section {
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        color: var(--accent-color);
+        font-weight: bold;
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 0.5rem;
+    }
+
+    .section-content {
+        color: var(--text-secondary);
+        line-height: 1.7;
+        font-size: 1.1rem;
+    }
+
+    .campaign-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+    }
+
+    .back-link {
+        color: var(--accent-color);
+        text-decoration: none;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .back-link:hover {
+        color: var(--accent-color);
+        text-decoration: underline;
+    }
+
+    .advertiser-info {
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .advertiser-name {
+        color: var(--accent-color);
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .campaign-date {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+        .campaign-meta-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .campaign-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .campaign-title {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<div class="container">
+    <a href="{% url 'campaigns' %}" class="back-link">
+        ← Back to Campaigns
+    </a>
+
+    <div class="campaign-detail-header">
+        <h1 class="campaign-title">{{ campaign.title }}</h1>
+        <p class="campaign-subtitle">Campaign Details</p>
+    </div>
+
+    <div class="campaign-detail-card">
+        <div class="campaign-header">
+            <div class="campaign-title-section">
+                <h2 class="campaign-title">{{ campaign.title }}</h2>
+                <div class="advertiser-info">
+                    <div class="advertiser-name">By {{ campaign.advertiser.user.username }}</div>
+                    <div class="campaign-date">Created on {{ campaign.created_at|date:"F j, Y" }}</div>
+                </div>
+            </div>
+            <span class="campaign-status">{{ campaign.status }}</span>
+        </div>
+
+        <!-- Budget Information -->
+        <div class="budget-info">
+            <div class="budget-title">Budget Information</div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="meta-item" style="background: transparent; border: none; padding: 0;">
+                        <div class="meta-label">Total Budget</div>
+                        <div class="meta-value">₹{{ campaign.budget }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="meta-item" style="background: transparent; border: none; padding: 0;">
+                        <div class="meta-label">Remaining Budget</div>
+                        <div class="meta-value">₹{{ campaign.get_remaining_budget }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="meta-item" style="background: transparent; border: none; padding: 0;">
+                        <div class="meta-label">Spent</div>
+                        <div class="meta-value">₹{{ campaign.budget|add:"-"|add:campaign.get_remaining_budget }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="budget-progress">
+                {% widthratio campaign.budget|add:"-"|add:campaign.get_remaining_budget campaign.budget 100 as spent_percentage %}
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ spent_percentage }}%"></div>
+                </div>
+                <small style="opacity: 0.8;">{{ spent_percentage }}% of budget used</small>
+            </div>
+        </div>
+
+        <!-- Campaign Meta Information -->
+        <div class="campaign-meta-grid">
+            <div class="meta-item">
+                <div class="meta-label">CPM Rate</div>
+                                        <div class="meta-value">₹100</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Applications</div>
+                <div class="meta-value">{{ campaign.get_applications_count }}</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Status</div>
+                <div class="meta-value">{{ campaign.status|title }}</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Created</div>
+                <div class="meta-value">{{ campaign.created_at|date:"M j" }}</div>
+            </div>
+        </div>
+
+        <!-- Campaign Description -->
+        <div class="campaign-section">
+            <h3 class="section-title">Description</h3>
+            <div class="section-content">
+                {{ campaign.description|linebreaks }}
+            </div>
+        </div>
+
+        <!-- Campaign Requirements -->
+        <div class="campaign-section">
+            <h3 class="section-title">Requirements</h3>
+            <div class="section-content">
+                {{ campaign.requirements|linebreaks }}
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="campaign-actions">
+            {% if user_profile and user_profile.user_type == 'creator' %}
+                <a href="{% url 'apply_campaign' campaign.id %}" class="btn btn-primary btn-lg">Apply Now</a>
+            {% elif is_guest %}
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Sign Up to Apply</a>
+            {% elif not user_profile %}
+                <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Login to Apply</a>
+            {% else %}
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Create Creator Account</a>
+            {% endif %}
+            <a href="{% url 'campaigns' %}" class="btn btn-outline-secondary btn-lg">Back to Campaigns</a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

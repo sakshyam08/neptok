@@ -1,0 +1,128 @@
+{% extends "main/base.html" %}
+{% block content %}
+
+<style>
+  .applications-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  h2 {
+    font-weight: 700;
+    font-size: 2rem;
+    color: #0a66c2; /* LinkedIn Blue */
+    margin-bottom: 1.5rem;
+  }
+
+  .app-card {
+    background-color: #ffffff;
+    border: 1px solid #dddfe2;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+    transition: box-shadow 0.2s ease-in-out;
+  }
+
+  .app-card:hover {
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+  }
+
+  .app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .campaign-title {
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: #212529;
+  }
+
+  .creator-name {
+    font-style: italic;
+    color: #555;
+  }
+
+  .status {
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    text-transform: capitalize;
+  }
+
+  .status.pending {
+    background-color: #e8f0fe;
+    color: #0a66c2;
+  }
+  .status.approved {
+    background-color: #dafbe1;
+    color: #0a8a0a;
+  }
+  .status.rejected {
+    background-color: #fbe9e9;
+    color: #c00;
+  }
+
+  form.action-buttons {
+    margin-top: 1rem;
+  }
+
+  form.action-buttons button {
+    background-color: #0a66c2;
+    border: none;
+    color: white;
+    padding: 0.5rem 1rem;
+    margin-right: 0.75rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  form.action-buttons button.reject {
+    background-color: #c00;
+  }
+  form.action-buttons button:hover {
+    background-color: #004182;
+  }
+  form.action-buttons button.reject:hover {
+    background-color: #800000;
+  }
+</style>
+
+<div class="applications-container">
+  <h2>Applications to Your Campaigns</h2>
+
+  {% if applications %}
+    {% for app in applications %}
+      <div class="app-card">
+        <div class="app-header">
+          <div>
+            <div class="campaign-title">{{ app.campaign.title }}</div>
+            <div class="creator-name">By {{ app.creator.user.username }}</div>
+          </div>
+          <div class="status {{ app.status }}">
+            {{ app.status|title }}
+          </div>
+        </div>
+
+        {% if app.status == "pending" %}
+          <form method="post" class="action-buttons">
+            {% csrf_token %}
+            <input type="hidden" name="application_id" value="{{ app.id }}">
+            <button type="submit" name="action" value="approve">Approve</button>
+            <button type="submit" name="action" value="reject" class="reject">Reject</button>
+          </form>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No applications yet for your campaigns.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

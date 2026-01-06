@@ -1,0 +1,339 @@
+{% extends 'main/base.html' %}
+
+{% block title %}NepTok - Connect Advertisers with TikTok Creators{% endblock %}
+
+{% block content %}
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+        padding: 4rem 0;
+        margin-bottom: 3rem;
+        border-radius: 0 0 20px 20px;
+        box-shadow: var(--shadow);
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: bold;
+        color: var(--accent-color);
+        margin-bottom: 1rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.3rem;
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    .feature-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: var(--shadow);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--accent-color) 0%, #0056b3 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    .feature-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--accent-color);
+        margin-bottom: 1rem;
+    }
+
+    .feature-description {
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+    .cta-section {
+        background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 3rem;
+        margin: 3rem 0;
+        text-align: center;
+        box-shadow: var(--shadow);
+    }
+
+    .cta-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--accent-color);
+        margin-bottom: 1rem;
+    }
+
+    .cta-description {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    .steps-section {
+        margin: 3rem 0;
+    }
+
+    .step-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        position: relative;
+        box-shadow: var(--shadow);
+    }
+
+    .step-number {
+        position: absolute;
+        top: -15px;
+        left: 20px;
+        background: var(--accent-color);
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+
+    .step-title {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: var(--accent-color);
+        margin-bottom: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .step-description {
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+    .trust-badge {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: inline-block;
+        margin: 0.5rem;
+        box-shadow: var(--shadow);
+    }
+
+    .section-title {
+        color: var(--accent-color);
+        font-weight: 600;
+    }
+
+    .section-subtitle {
+        color: var(--text-secondary);
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="hero-title">Connect. Create. Earn.</h1>
+                <p class="hero-subtitle">
+                    NepTok bridges the gap between advertisers and TikTok creators, 
+                    enabling authentic partnerships that drive real results.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Get Started</a>
+                    <a href="{% url 'campaigns' %}" class="btn btn-outline-primary btn-lg">Browse Campaigns</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="feature-card text-center">
+                            <div class="feature-icon">📈</div>
+                            <h3 class="feature-title">Grow Your Reach</h3>
+                            <p class="feature-description">Connect with trusted creators to amplify your brand message</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="feature-card text-center">
+                            <div class="feature-icon">💰</div>
+                            <h3 class="feature-title">Earn Money</h3>
+                            <p class="feature-description">Monetize your content and earn based on your reach</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="feature-card text-center">
+                            <div class="feature-icon">🤝</div>
+                            <h3 class="feature-title">Authentic Partnerships</h3>
+                            <p class="feature-description">Build genuine connections with brands that align with your values</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="feature-card text-center">
+                            <div class="feature-icon">📊</div>
+                            <h3 class="feature-title">Track Performance</h3>
+                            <p class="feature-description">Monitor your earnings and campaign performance in real-time</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works Section -->
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center mb-5">
+            <h2 class="display-4 section-title">How It Works</h2>
+            <p class="lead section-subtitle">Simple steps to get started on NepTok</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3 class="step-title">For Advertisers</h3>
+                <div class="step-description">
+                    <ul style="color: var(--text-secondary);">
+                        <li>Create your account as an advertiser</li>
+                        <li>Post campaigns with your requirements</li>
+                        <li>Review creator applications</li>
+                        <li>Track campaign performance and ROI</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3 class="step-title">For Creators</h3>
+                <div class="step-description">
+                    <ul style="color: var(--text-secondary);">
+                        <li>Sign up as a TikTok creator</li>
+                        <li>Browse available campaigns</li>
+                        <li>Apply with your creative proposal</li>
+                        <li>Earn money based on your content performance</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Trust Section -->
+<div class="cta-section">
+    <div class="container">
+        <h2 class="cta-title">Grow Your Reach with Trusted Creators</h2>
+        <p class="cta-description">
+            Join thousands of advertisers and creators who trust NepTok for authentic, 
+            results-driven partnerships. Our platform ensures quality connections and 
+            transparent performance tracking.
+        </p>
+        <div class="d-flex justify-content-center flex-wrap">
+            <span class="trust-badge">Verified Creators</span>
+            <span class="trust-badge">Secure Payments</span>
+            <span class="trust-badge">Performance Tracking</span>
+            <span class="trust-badge">24/7 Support</span>
+        </div>
+        <div class="mt-4">
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg me-3">Join as Advertiser</a>
+            <a href="{% url 'register' %}" class="btn btn-outline-primary btn-lg">Join as Creator</a>
+        </div>
+    </div>
+</div>
+
+<!-- Features Grid -->
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center mb-5">
+            <h2 class="display-4 section-title">Why Choose NepTok?</h2>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-4 col-md-6">
+            <div class="feature-card text-center">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">Targeted Matching</h3>
+                <p class="feature-description">
+                    Our smart algorithm matches you with the perfect partners based on 
+                    your niche, audience, and campaign requirements.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="feature-card text-center">
+                <div class="feature-icon">💸</div>
+                <h3 class="feature-title">Fair Compensation</h3>
+                <p class="feature-description">
+                    Earn based on actual performance with transparent CPM rates and 
+                    real-time earnings tracking.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="feature-card text-center">
+                <div class="feature-icon">🛡️</div>
+                <h3 class="feature-title">Secure Platform</h3>
+                <p class="feature-description">
+                    Your data and payments are protected with enterprise-grade security 
+                    and escrow protection.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="feature-card text-center">
+                <div class="feature-icon">📱</div>
+                <h3 class="feature-title">Easy Management</h3>
+                <p class="feature-description">
+                    Manage all your campaigns and applications from one intuitive dashboard.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="feature-card text-center">
+                <div class="feature-icon">📈</div>
+                <h3 class="feature-title">Analytics & Insights</h3>
+                <p class="feature-description">
+                    Get detailed analytics on your performance, earnings, and campaign success.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="feature-card text-center">
+                <div class="feature-icon">🎉</div>
+                <h3 class="feature-title">Community Support</h3>
+                <p class="feature-description">
+                    Join our community of creators and advertisers for tips, networking, and support.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

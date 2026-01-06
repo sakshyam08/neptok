@@ -1,0 +1,243 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Register - NepTok{% endblock %}
+
+{% block content %}
+<style>
+    .register-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .register-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .register-title {
+        color: var(--accent-color);
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .register-subtitle {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .form-section {
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        color: var(--accent-color);
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .form-floating {
+        margin-bottom: 1rem;
+    }
+
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        background-color: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .form-floating > .form-control:focus,
+    .form-floating > .form-select:focus {
+        background-color: var(--bg-secondary);
+        border-color: var(--accent-color);
+        color: var(--text-primary);
+        box-shadow: 0 0 0 0.2rem rgba(10, 102, 194, 0.25);
+    }
+
+    .form-floating > label {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .btn-register {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .user-type-info {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: var(--shadow);
+    }
+
+    .user-type-title {
+        color: var(--accent-color);
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .user-type-description {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .form-check-input:checked {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+    }
+
+    .form-check-label {
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .signin-link {
+        color: var(--accent-color);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .signin-link:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+</style>
+
+<div class="register-container">
+    <div class="register-header">
+        <h1 class="register-title">Join NepTok</h1>
+        <p class="register-subtitle">Create your account and start connecting</p>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-4">
+            <form method="post">
+                {% csrf_token %}
+                
+                <!-- Account Information -->
+                <div class="form-section">
+                    <h3 class="section-title">Account Information</h3>
+                    
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                        <label for="username">Username</label>
+                        {% if form.username.errors %}
+                            <div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="password1" name="password1" placeholder="Password" required>
+                        <label for="password1">Password</label>
+                        {% if form.password1.errors %}
+                            <div class="text-danger small mt-1">{{ form.password1.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password" required>
+                        <label for="password2">Confirm Password</label>
+                        {% if form.password2.errors %}
+                            <div class="text-danger small mt-1">{{ form.password2.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Profile Information -->
+                <div class="form-section">
+                    <h3 class="section-title">Profile Information</h3>
+                    
+                    <div class="form-floating mb-3">
+                        <select class="form-select" id="user_type" name="user_type" required>
+                            <option value="">Select your account type</option>
+                            <option value="advertiser">Advertiser</option>
+                            <option value="creator">Creator</option>
+                        </select>
+                        <label for="user_type">Account Type</label>
+                        {% if profile_form.user_type.errors %}
+                            <div class="text-danger small mt-1">{{ profile_form.user_type.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="user-type-info" id="advertiser-info" style="display: none;">
+                        <div class="user-type-title">Advertiser Account</div>
+                        <div class="user-type-description">
+                            Create campaigns, review creator applications, and track your advertising ROI.
+                        </div>
+                    </div>
+
+                    <div class="user-type-info" id="creator-info" style="display: none;">
+                        <div class="user-type-title">Creator Account</div>
+                        <div class="user-type-description">
+                            Apply for campaigns, track your content performance, and earn money based on your reach.
+                        </div>
+                    </div>
+                    
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" id="bio" name="bio" placeholder="Bio" style="height: 100px"></textarea>
+                        <label for="bio">Bio (Optional)</label>
+                        {% if profile_form.bio.errors %}
+                            <div class="text-danger small mt-1">{{ profile_form.bio.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="tiktok_handle" name="tiktok_handle" placeholder="TikTok Handle">
+                        <label for="tiktok_handle">TikTok Handle (Optional)</label>
+                        {% if profile_form.tiktok_handle.errors %}
+                            <div class="text-danger small mt-1">{{ profile_form.tiktok_handle.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-floating mb-3">
+                                        <div class="form-text text-muted">
+                    <strong>Fixed Rate:</strong> ₹100 per 1000 views
+                </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-register">
+                    Create Account
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <p style="color: var(--text-secondary);">
+            Already have an account? 
+            <a href="{% url 'login' %}" class="signin-link">
+                Sign in here
+            </a>
+        </p>
+    </div>
+</div>
+
+<script>
+    // Show/hide user type info based on selection
+    document.getElementById('user_type').addEventListener('change', function() {
+        const advertiserInfo = document.getElementById('advertiser-info');
+        const creatorInfo = document.getElementById('creator-info');
+        
+        advertiserInfo.style.display = 'none';
+        creatorInfo.style.display = 'none';
+        
+        if (this.value === 'advertiser') {
+            advertiserInfo.style.display = 'block';
+        } else if (this.value === 'creator') {
+            creatorInfo.style.display = 'block';
+        }
+    });
+</script>
+{% endblock %} 

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore Membership</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      color: #333;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(45deg, #4CAF50, #2E8B57);
+      padding: 15px 30px;
+      color: white;
+    }
+    .navbar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover {
+      color: #ffeb3b;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 60px 20px;
+      background: linear-gradient(135deg, #4CAF50, #2E8B57);
+      color: white;
+    }
+    .hero h2 {
+      font-size: 36px;
+      margin-bottom: 15px;
+    }
+    .hero p {
+      font-size: 18px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Membership Cards */
+    .membership-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 40px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card h3 {
+      color: #2E8B57;
+    }
+    .card p {
+      font-size: 15px;
+      margin: 15px 0;
+    }
+    .price {
+      font-size: 22px;
+      font-weight: bold;
+      margin: 10px 0;
+      color: #4CAF50;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      border-radius: 25px;
+      background: linear-gradient(45deg, #4CAF50, #2E8B57);
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+    .btn:hover {
+      background: linear-gradient(45deg, #45a049, #246b45);
+      transform: scale(1.05);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      background: #2E8B57;
+      color: white;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <h1>My Website</h1>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/explore">Explore</a>
+      <a href="#">Services</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <h2>Explore Our Membership Plans</h2>
+    <p>Unlock premium benefits, exclusive access, and exciting rewards by becoming a member today!</p>
+  </div>
+
+
+  <!-- Membership Cards -->
+  <div class="membership-section">
+    {% for plan in plans %}
+
+    <div class="card">
+      
+      <h5 class="card-title">{{plan.name}}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{plan.description}}</h6>
+      <h4 class="price">${{plan.price}}</h4>
+      <p class="card-text">{{plan.features}}</p>
+      
+      {% comment %} <p class="price">$9 / month</p>
+      <a href="#" class="btn">Join Now</a> {% endcomment %}
+    </div>
+    {%endfor%}
+    {% comment %} <div class="card">
+      <h3>Standard</h3>
+      <p>Ideal for regular users who want more perks.</p>
+      <p class="price">$19 / month</p>
+      <a href="#" class="btn">Join Now</a>
+    </div>
+    <div class="card">
+      <h3>Premium</h3>
+      <p>Best for professionals who want full access and priority support.</p>
+      <p class="price">$29 / month</p>
+      <a href="#" class="btn">Join Now</a>
+    </div> {% endcomment %}
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>Designed by Sakshyam | &copy; 2025 My Website</p>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,167 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Login - NepTok{% endblock %}
+
+{% block content %}
+<style>
+    .login-container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .login-title {
+        color: var(--accent-color);
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .login-subtitle {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .form-floating {
+        margin-bottom: 1rem;
+    }
+
+    .form-floating > .form-control {
+        background-color: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .form-floating > .form-control:focus {
+        background-color: var(--bg-secondary);
+        border-color: var(--accent-color);
+        color: var(--text-primary);
+        box-shadow: 0 0 0 0.2rem rgba(10, 102, 194, 0.25);
+    }
+
+    .form-floating > label {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .btn-login {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .divider {
+        text-align: center;
+        margin: 2rem 0;
+        position: relative;
+    }
+
+    .divider::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: var(--border-color);
+    }
+
+    .divider span {
+        background: var(--bg-primary);
+        padding: 0 1rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .guest-login-section {
+        text-align: center;
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+    }
+
+    .guest-login-title {
+        color: var(--accent-color);
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+
+    .guest-login-description {
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+        line-height: 1.5;
+    }
+
+    .signup-link {
+        color: var(--accent-color);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .signup-link:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-header">
+        <h1 class="login-title">Welcome Back</h1>
+        <p class="login-subtitle">Sign in to your NepTok account</p>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-4">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                    <label for="username">Username</label>
+                </div>
+                
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                    <label for="password">Password</label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-login">
+                    Sign In
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="divider">
+        <span>or</span>
+    </div>
+
+    <div class="guest-login-section">
+        <h3 class="guest-login-title">Just Want to Browse?</h3>
+        <p class="guest-login-description">
+            Explore campaigns and see what NepTok has to offer without creating an account.
+        </p>
+        <a href="{% url 'guest_login' %}" class="btn btn-outline-primary">
+            Continue as Guest
+        </a>
+    </div>
+
+    <div class="text-center mt-4">
+        <p style="color: var(--text-secondary);">
+            Don't have an account? 
+            <a href="{% url 'register' %}" class="signup-link">
+                Sign up here
+            </a>
+        </p>
+    </div>
+</div>
+{% endblock %} 

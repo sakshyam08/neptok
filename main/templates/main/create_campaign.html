@@ -1,0 +1,221 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Create Campaign - NepTok{% endblock %}
+
+{% block content %}
+<style>
+    .create-campaign-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .create-campaign-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .create-campaign-title {
+        color: var(--accent-color);
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .create-campaign-subtitle {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .form-section {
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        color: var(--accent-color);
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .form-floating {
+        margin-bottom: 1rem;
+    }
+
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        background-color: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .form-floating > .form-control:focus,
+    .form-floating > .form-select:focus {
+        background-color: var(--bg-secondary);
+        border-color: var(--accent-color);
+        color: var(--text-primary);
+        box-shadow: 0 0 0 0.2rem rgba(10, 102, 194, 0.25);
+    }
+
+    .form-floating > label {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .btn-create-campaign {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .campaign-tips {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow);
+    }
+
+    .tips-title {
+        color: var(--accent-color);
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    .tips-list {
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+    .tips-list li {
+        margin-bottom: 0.5rem;
+    }
+
+    .form-check-input:checked {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+    }
+
+    .form-check-label {
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+</style>
+
+<div class="create-campaign-container">
+    <div class="create-campaign-header">
+        <h1 class="create-campaign-title">Create New Campaign</h1>
+        <p class="create-campaign-subtitle">Connect with TikTok creators to promote your brand</p>
+    </div>
+
+    <div class="campaign-tips">
+        <h3 class="tips-title">💡 Campaign Tips</h3>
+        <ul class="tips-list">
+            <li>Be specific about your requirements and expectations</li>
+            <li>Set realistic budgets and CPM rates</li>
+            <li>Provide clear brand guidelines</li>
+            <li>Include relevant hashtags and mentions</li>
+            <li>Set clear deadlines and deliverables</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-4">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="form-section">
+                    <h3 class="section-title">Campaign Information</h3>
+                    
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="title" name="title" placeholder="Campaign Title" required>
+                        <label for="title">Campaign Title</label>
+                        {% if form.title.errors %}
+                            <div class="text-danger small mt-1">{{ form.title.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" id="description" name="description" placeholder="Campaign Description" style="height: 120px" required></textarea>
+                        <label for="description">Campaign Description</label>
+                        {% if form.description.errors %}
+                            <div class="text-danger small mt-1">{{ form.description.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" id="requirements" name="requirements" placeholder="Requirements" style="height: 100px" required></textarea>
+                        <label for="requirements">Requirements & Guidelines</label>
+                        {% if form.requirements.errors %}
+                            <div class="text-danger small mt-1">{{ form.requirements.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Budget & Compensation</h3>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" id="budget" name="budget" placeholder="Budget" step="0.01" required>
+                                <label for="budget">Total Budget (₹)</label>
+                                {% if form.budget.errors %}
+                                    <div class="text-danger small mt-1">{{ form.budget.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                                <div class="form-text text-muted">
+                    <strong>Fixed Rate:</strong> ₹100 per 1000 views
+                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Campaign Settings</h3>
+                    
+                    <div class="form-floating mb-3">
+                        <select class="form-select" id="status" name="status" required>
+                            <option value="draft">Draft</option>
+                            <option value="active">Active</option>
+                            <option value="paused">Paused</option>
+                        </select>
+                        <label for="status">Campaign Status</label>
+                        {% if form.status.errors %}
+                            <div class="text-danger small mt-1">{{ form.status.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="is_public" name="is_public" checked>
+                        <label class="form-check-label" for="is_public">
+                            Make this campaign public (visible to all creators)
+                        </label>
+                        {% if form.is_public.errors %}
+                            <div class="text-danger small mt-1">{{ form.is_public.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-create-campaign">
+                    Create Campaign
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'advertiser_dashboard' %}" class="btn btn-outline-secondary">
+            ← Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,290 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Apply for Campaign - NepTok{% endblock %}
+
+{% block content %}
+<style>
+    .apply-campaign-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .apply-campaign-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .apply-campaign-title {
+        color: var(--accent-color);
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .apply-campaign-subtitle {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .campaign-preview {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow);
+    }
+
+    .campaign-preview-title {
+        color: var(--accent-color);
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    .campaign-meta {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .meta-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .meta-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+    }
+
+    .meta-value {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: var(--accent-color);
+    }
+
+    .campaign-description {
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .campaign-requirements {
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .requirements-title {
+        color: var(--accent-color);
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .requirements-text {
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+    .form-section {
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        color: var(--accent-color);
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .form-floating {
+        margin-bottom: 1rem;
+    }
+
+    .form-floating > .form-control {
+        background-color: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .form-floating > .form-control:focus {
+        background-color: var(--bg-secondary);
+        border-color: var(--accent-color);
+        color: var(--text-primary);
+        box-shadow: 0 0 0 0.2rem rgba(10, 102, 194, 0.25);
+    }
+
+    .form-floating > label {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .btn-apply-campaign {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .application-tips {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow);
+    }
+
+    .tips-title {
+        color: var(--accent-color);
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    .tips-list {
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+    .tips-list li {
+        margin-bottom: 0.5rem;
+    }
+
+    .estimated-earnings {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 1rem;
+        box-shadow: var(--shadow);
+    }
+
+    .earnings-amount {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .earnings-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+</style>
+
+<div class="apply-campaign-container">
+    <div class="apply-campaign-header">
+        <h1 class="apply-campaign-title">Apply for Campaign</h1>
+        <p class="apply-campaign-subtitle">Submit your proposal to work with this brand</p>
+    </div>
+
+    <!-- Campaign Preview -->
+    <div class="campaign-preview">
+        <h3 class="campaign-preview-title">{{ campaign.title }}</h3>
+        
+        <div class="campaign-meta">
+            <div class="meta-item">
+                <span class="meta-label">Budget</span>
+                <span class="meta-value">₹{{ campaign.budget }}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">CPM Rate</span>
+                                        <span class="meta-value">₹100</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Applications</span>
+                <span class="meta-value">{{ campaign.get_applications_count }}</span>
+            </div>
+        </div>
+        
+        <p class="campaign-description">{{ campaign.description }}</p>
+        
+        <div class="campaign-requirements">
+            <div class="requirements-title">Requirements:</div>
+            <div class="requirements-text">{{ campaign.requirements }}</div>
+        </div>
+    </div>
+
+    <div class="application-tips">
+        <h3 class="tips-title">💡 Application Tips</h3>
+        <ul class="tips-list">
+            <li>Be specific about your approach and creative ideas</li>
+            <li>Mention your relevant experience and audience</li>
+            <li>Provide realistic view estimates based on your past performance</li>
+            <li>Show enthusiasm for the brand and campaign</li>
+            <li>Include any relevant portfolio links or examples</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-4">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="form-section">
+                    <h3 class="section-title">Your Proposal</h3>
+                    
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" id="proposal" name="proposal" placeholder="Your proposal..." style="height: 150px" required></textarea>
+                        <label for="proposal">Your Proposal</label>
+                        {% if form.proposal.errors %}
+                            <div class="text-danger small mt-1">{{ form.proposal.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Performance Estimate</h3>
+                    
+                    <div class="form-floating mb-3">
+                        <input type="number" class="form-control" id="estimated_views" name="estimated_views" placeholder="Estimated Views" min="0" required>
+                        <label for="estimated_views">Estimated Views for This Campaign</label>
+                        {% if form.estimated_views.errors %}
+                            <div class="text-danger small mt-1">{{ form.estimated_views.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="estimated-earnings" id="earningsPreview">
+                        <div class="earnings-amount">₹0.00</div>
+                        <div class="earnings-label">Estimated Earnings</div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-apply-campaign">
+                    Submit Application
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'campaigns' %}" class="btn btn-outline-secondary">
+            ← Back to Campaigns
+        </a>
+    </div>
+</div>
+
+<script>
+// Calculate estimated earnings based on views and CPM rate
+document.getElementById('estimated_views').addEventListener('input', function() {
+    const views = parseInt(this.value) || 0;
+    const cpmRate = 100;
+    const earnings = (views / 1000) * cpmRate;
+    
+    document.getElementById('earningsPreview').innerHTML = `
+        <div class="earnings-amount">₹${earnings.toFixed(2)}</div>
+        <div class="earnings-label">Estimated Earnings</div>
+    `;
+});
+</script>
+{% endblock %} 

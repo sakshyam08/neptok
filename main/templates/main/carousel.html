@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar with Infinite Carousel</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(45deg, #4CAF50, #2E8B57);
+      padding: 15px 30px;
+      color: white;
+    }
+    .navbar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover {
+      color: #ffeb3b;
+    }
+
+    /* Carousel Container */
+    .carousel {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      height: 400px;
+    }
+
+    .carousel-images {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .carousel-images img {
+      width: 100%;
+      flex-shrink: 0;
+      height: 400px;
+      object-fit: cover;
+    }
+
+    /* Arrows */
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.5);
+      border: none;
+      color: white;
+      font-size: 24px;
+      padding: 10px;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .carousel-btn.left { left: 10px; }
+    .carousel-btn.right { right: 10px; }
+    .carousel-btn:hover { background: rgba(0,0,0,0.7); }
+
+    /* Bottom Controls (Dots + Button) */
+    .carousel-controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      z-index: 3;
+    }
+
+    /* Dots */
+    .carousel-dots {
+      display: flex;
+      gap: 10px;
+    }
+    .carousel-dots button {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255,255,255,0.6);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .carousel-dots button.active {
+      background: #4CAF50;
+    }
+
+    /* Explore Membership Button */
+    .explore-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
+      background: linear-gradient(45deg, #4CAF50, #2E8B57);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: all 0.3s;
+    }
+    .explore-btn:hover {
+      background: linear-gradient(45deg, #45a049, #246b45);
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <h1>My Website</h1>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Services</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+
+  <!-- Carousel -->
+  <div class="carousel">
+    <button class="carousel-btn left">&#10094;</button>
+    <div class="carousel-images" id="carousel-images">
+      <!-- Clone of last image -->
+      <img src="{% static 'Esewa.png' %}" alt="Image 5 clone">
+
+      <!-- Original images -->
+      <img src="{% static 'BMW.svg.png' %}" alt="Image 1">
+      <img src="{% static 'R-nineT.png' %}" alt="Image 2">
+      <img src="{% static 's 100 r.webp' %}" alt="Image 3">
+      <img src="{% static 's 100 rr.webp' %}" alt="Image 4">
+      <img src="{% static 'Esewa.png' %}" alt="Image 5">
+
+      <!-- Clone of first image -->
+      <img src="{% static 'BMW.svg.png' %}" alt="Image 1 clone">
+    </div>
+    <button class="carousel-btn right">&#10095;</button>
+
+    <!-- Dots + Explore Button -->
+    <div class="carousel-controls">
+      <div class="carousel-dots" id="carousel-dots"></div>
+      <a class="explore-btn" href="{% url 'explore' %}">Explore Membership</a>
+    </div>
+  </div>
+
+  <script>
+    const carouselImages = document.getElementById('carousel-images');
+    const images = document.querySelectorAll('#carousel-images img');
+    const totalImages = images.length;
+    let index = 1; // Start at first real image
+    const intervalTime = 3000;
+
+    // Dots
+    const dotsContainer = document.getElementById('carousel-dots');
+    const realImageCount = totalImages - 2; // exclude clones
+    for (let i = 0; i < realImageCount; i++) {
+      const dot = document.createElement('button');
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => moveToIndex(i + 1));
+      dotsContainer.appendChild(dot);
+    }
+    const dots = dotsContainer.querySelectorAll('button');
+
+    // Set initial position
+    carouselImages.style.transform = `translateX(${-index * 100}%)`;
+
+    function updateDots() {
+      dots.forEach(dot => dot.classList.remove('active'));
+      dots[index - 1]?.classList.add('active');
+    }
+
+    function moveToIndex(i) {
+      carouselImages.style.transition = "transform 0.5s ease-in-out";
+      index = i;
+      carouselImages.style.transform = `translateX(${-index * 100}%)`;
+      updateDots();
+    }
+
+    function nextImage() {
+      if (index >= totalImages - 1) return;
+      moveToIndex(index + 1);
+    }
+
+    function prevImage() {
+      if (index <= 0) return;
+      moveToIndex(index - 1);
+    }
+
+    // Loop effect when reaching cloned slides
+    carouselImages.addEventListener('transitionend', () => {
+      if (images[index].alt === "Image 1 clone") {
+        carouselImages.style.transition = "none";
+        index = 1;
+        carouselImages.style.transform = `translateX(${-index * 100}%)`;
+      }
+      if (images[index].alt === "Image 5 clone") {
+        carouselImages.style.transition = "none";
+        index = totalImages - 2;
+        carouselImages.style.transform = `translateX(${-index * 100}%)`;
+      }
+      updateDots();
+    });
+
+    // Buttons
+    document.querySelector('.carousel-btn.right').addEventListener('click', nextImage);
+    document.querySelector('.carousel-btn.left').addEventListener('click', prevImage);
+
+    // Auto slide
+    setInterval(nextImage, intervalTime);
+  </script>
+
+</body>
+</html>

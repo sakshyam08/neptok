@@ -1,0 +1,233 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Add Content - NepTok{% endblock %}
+
+{% block content %}
+<style>
+    .add-content-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .add-content-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .add-content-title {
+        color: var(--accent-color);
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .add-content-subtitle {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .form-section {
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        color: var(--accent-color);
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .form-floating {
+        margin-bottom: 1rem;
+    }
+
+    .form-floating > .form-control {
+        background-color: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .form-floating > .form-control:focus {
+        background-color: var(--bg-secondary);
+        border-color: var(--accent-color);
+        color: var(--text-primary);
+        box-shadow: 0 0 0 0.2rem rgba(10, 102, 194, 0.25);
+    }
+
+    .form-floating > label {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .btn-add-content {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .content-tips {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow);
+    }
+
+    .tips-title {
+        color: var(--accent-color);
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    .tips-list {
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+    .tips-list li {
+        margin-bottom: 0.5rem;
+    }
+
+    .earnings-preview {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 1rem;
+        box-shadow: var(--shadow);
+    }
+
+    .earnings-amount {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .earnings-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .cpm-info {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: var(--shadow);
+    }
+
+    .cpm-title {
+        color: var(--accent-color);
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .cpm-description {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+</style>
+
+<div class="add-content-container">
+    <div class="add-content-header">
+        <h1 class="add-content-title">Add New Content</h1>
+        <p class="add-content-subtitle">Track your TikTok content performance and earnings</p>
+    </div>
+
+    <div class="content-tips">
+        <h3 class="tips-title">💡 Content Tracking Tips</h3>
+        <ul class="tips-list">
+            <li>Update your view counts regularly for accurate earnings</li>
+            <li>Track both organic and campaign-related content</li>
+            <li>Include relevant descriptions for better organization</li>
+            <li>Monitor your CPM rate and adjust as needed</li>
+            <li>Keep track of your best performing content</li>
+        </ul>
+    </div>
+
+    <div class="cpm-info">
+                        <div class="cpm-title">Fixed Rate: ₹100 per 1000 views</div>
+        <div class="cpm-description">
+            This is your Cost Per Mille (CPM) rate - the amount you earn per 1,000 views. 
+            You can update this in your profile settings.
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-4">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="form-section">
+                    <h3 class="section-title">Content Information</h3>
+                    
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="title" name="title" placeholder="Content Title" required>
+                        <label for="title">Content Title</label>
+                        {% if form.title.errors %}
+                            <div class="text-danger small mt-1">{{ form.title.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" id="description" name="description" placeholder="Description" style="height: 100px"></textarea>
+                        <label for="description">Description (Optional)</label>
+                        {% if form.description.errors %}
+                            <div class="text-danger small mt-1">{{ form.description.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Performance Data</h3>
+                    
+                    <div class="form-floating mb-3">
+                        <input type="number" class="form-control" id="views" name="views" placeholder="Views" min="0" value="0" required>
+                        <label for="views">Total Views</label>
+                        {% if form.views.errors %}
+                            <div class="text-danger small mt-1">{{ form.views.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="earnings-preview" id="earningsPreview">
+                        <div class="earnings-amount">₹0.00</div>
+                        <div class="earnings-label">Estimated Earnings</div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-add-content">
+                    Add Content
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'creator_dashboard' %}" class="btn btn-outline-secondary">
+            ← Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<script>
+// Calculate earnings based on views and CPM rate
+document.getElementById('views').addEventListener('input', function() {
+    const views = parseInt(this.value) || 0;
+    const cpmRate = 100;
+    const earnings = (views / 1000) * cpmRate;
+    
+    document.getElementById('earningsPreview').innerHTML = `
+        <div class="earnings-amount">₹${earnings.toFixed(2)}</div>
+        <div class="earnings-label">Estimated Earnings</div>
+    `;
+});
+</script>
+{% endblock %} 

@@ -1,0 +1,270 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Campaigns - NepTok{% endblock %}
+
+{% block content %}
+<style>
+    .campaigns-header {
+        margin-bottom: 2rem;
+    }
+
+    .campaigns-title {
+        color: var(--accent-color);
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .campaigns-subtitle {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .campaign-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: var(--shadow);
+    }
+
+    .campaign-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .campaign-header {
+        display: flex;
+        justify-content: between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .campaign-title {
+        color: var(--accent-color);
+        font-size: 1.4rem;
+        font-weight: bold;
+        margin: 0;
+        flex: 1;
+    }
+
+    .campaign-status {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .campaign-meta {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .meta-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .meta-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+    }
+
+    .meta-value {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: var(--accent-color);
+    }
+
+    .campaign-description {
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .campaign-requirements {
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .requirements-title {
+        color: var(--accent-color);
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .requirements-text {
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+    .campaign-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-secondary);
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .guest-notice {
+        background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);
+        color: white;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        text-align: center;
+        box-shadow: var(--shadow);
+    }
+
+    .filter-section {
+        margin-bottom: 2rem;
+    }
+
+    .search-box {
+        max-width: 300px;
+    }
+
+    .section-title {
+        color: var(--accent-color);
+        font-weight: 600;
+    }
+</style>
+
+<div class="campaigns-header">
+    <h1 class="campaigns-title">Available Campaigns</h1>
+    <p class="campaigns-subtitle">Browse and apply for advertising campaigns from trusted brands</p>
+</div>
+
+{% if is_guest %}
+    <div class="guest-notice">
+        <h4>👋 Welcome Guest!</h4>
+        <p class="mb-0">You're browsing as a guest. Create an account to apply for campaigns and start earning.</p>
+    </div>
+{% endif %}
+
+<!-- Filter Section -->
+<div class="filter-section">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="search-box">
+                <input type="text" class="form-control" placeholder="Search campaigns..." id="searchInput">
+            </div>
+        </div>
+        <div class="col-md-6 text-end">
+            {% if user_profile and user_profile.user_type == 'creator' %}
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-primary">My Dashboard</a>
+            {% elif user_profile and user_profile.user_type == 'advertiser' %}
+                <a href="{% url 'create_campaign' %}" class="btn btn-primary">Create Campaign</a>
+            {% else %}
+                <a href="{% url 'register' %}" class="btn btn-primary">Join as Creator</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if campaigns %}
+    <div class="row" id="campaignsContainer">
+        {% for campaign in campaigns %}
+            <div class="col-lg-6 campaign-item">
+                <div class="campaign-card">
+                    <div class="campaign-header">
+                        <h3 class="campaign-title">{{ campaign.title }}</h3>
+                        <span class="campaign-status">Active</span>
+                    </div>
+                    
+                    <div class="campaign-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Total Budget</span>
+                            <span class="meta-value">₹{{ campaign.budget }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Remaining</span>
+                            <span class="meta-value">₹{{ campaign.get_remaining_budget }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">CPM Rate</span>
+                            <span class="meta-value">₹100</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Applications</span>
+                            <span class="meta-value">{{ campaign.get_applications_count }}</span>
+                        </div>
+                    </div>
+                    
+                    <p class="campaign-description">{{ campaign.description|truncatewords:50 }}</p>
+                    
+                    <div class="campaign-requirements">
+                        <div class="requirements-title">Requirements:</div>
+                        <div class="requirements-text">{{ campaign.requirements|truncatewords:30 }}</div>
+                    </div>
+                    
+                    <div class="campaign-actions">
+                        {% if user_profile and user_profile.user_type == 'creator' %}
+                            <a href="{% url 'apply_campaign' campaign.id %}" class="btn btn-primary">Apply Now</a>
+                        {% elif is_guest %}
+                            <a href="{% url 'register' %}" class="btn btn-primary">Sign Up to Apply</a>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="btn btn-primary">Login to Apply</a>
+                        {% endif %}
+                        <a href="{% url 'campaign_detail' campaign.id %}" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">📝</div>
+        <h3 class="section-title">No Campaigns Available</h3>
+        <p>There are currently no active campaigns. Check back later for new opportunities!</p>
+        {% if user_profile and user_profile.user_type == 'advertiser' %}
+            <a href="{% url 'create_campaign' %}" class="btn btn-primary">Create First Campaign</a>
+        {% endif %}
+    </div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Search functionality
+document.getElementById('searchInput').addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    const campaignItems = document.querySelectorAll('.campaign-item');
+    
+    campaignItems.forEach(item => {
+        const title = item.querySelector('.campaign-title').textContent.toLowerCase();
+        const description = item.querySelector('.campaign-description').textContent.toLowerCase();
+        
+        if (title.includes(searchTerm) || description.includes(searchTerm)) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+});
+</script>
+{% endblock %} 
